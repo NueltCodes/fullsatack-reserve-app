@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="tel"] {
+  @apply w-full border my-1 py-2 px-3 rounded-lg;
+}
+
+/* input[type="text"] {
+  @apply w-full border my-1 py-2 px-3 rounded-2xl;
+} */
+html ::-webkit-scrollbar {
+  display: none;
+}
+/* This is used to hide the scrollbar in safari browser */
+html {
+  scrollbar-width: none;
+}
+
+@layer components {
+  .inputText {
+    @apply placeholder:text-gray-300 bg-slate-700 focus:text-white focus:bg-black text-gray-300 transition duration-300 ease-in-out;
+  }
+}
+
+textarea {
+  @apply w-full border my-1 py-2 px-3 rounded-2xl sm:h-[140px] h-[70px];
+}
+button {
+  @apply bg-gray-300;
+}
+button.primary {
+  background-color: #f5385d;
+  @apply bg-primary hover:bg-red-600 duration-300 transition ease-in-out p-2 w-full text-white rounded-2xl;
+}
