@@ -32,7 +32,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div>
+    <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
       <div className="sm:block hidden">
         <AccountNav />
       </div>

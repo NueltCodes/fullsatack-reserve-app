@@ -39,12 +39,13 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
     onChange([filename, ...addedPhotos.filter((photo) => photo !== filename)]);
   }
 
-  function validateAndAddPhoto() {
+  function validateAndAddPhoto(ev) {
+    ev.preventDefault();
     if (!isValidLink(photoLink)) {
       alert("Please enter a valid link for the photo.");
       return;
     }
-    addPhotoByLink();
+    addPhotoByLink(ev);
   }
 
   function isValidLink(link) {

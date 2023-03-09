@@ -3,8 +3,8 @@ import { HiMoon } from "react-icons/hi";
 
 export default function BookingDates({ booking, className }) {
   return (
-    <div className={"flex md:gap-1 gap-2 md:flex-row flex-col " + className}>
-      <div className="flex sm:text-lg text-sm items-center">
+    <div className={"flex md:gap-1 gap-2 md:flex-row flex-wrap " + className}>
+      <div className="flex sm:text-lg text-base items-center gap-1">
         <HiMoon />
         {differenceInCalendarDays(
           new Date(booking.checkOut),
@@ -12,8 +12,8 @@ export default function BookingDates({ booking, className }) {
         )}{" "}
         nights:
       </div>
-      <div className="flex gap-2 items-center">
-        <div className="flex gap-1 sm:text-lg text-sm items-center sm:ml-2 ml-0 sm:pt-0 pt-2">
+      <div className="flex flex-wrap gap-2 items-center">
+        <div className="flex gap-1 sm:text-lg text-base items-center sm:ml-2 ml-0 ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -31,7 +31,7 @@ export default function BookingDates({ booking, className }) {
           {format(new Date(booking.checkIn), "yyyy-MM-dd")}
         </div>
         &rarr;
-        <div className="flex gap-1 sm:text-lg text-sm items-center">
+        <div className="flex gap-1 sm:text-lg text-base items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

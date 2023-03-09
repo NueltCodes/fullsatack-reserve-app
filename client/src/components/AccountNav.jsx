@@ -25,8 +25,8 @@ export default function AccountNav({ setClose }) {
         className={`${
           pathname === `/account/places/${id}` ||
           pathname === `/account/places/new`
-            ? "sm:w-full w-[70%] bg-black sm:bg-black sm:relative transform fixed z-50 flex-col sm:flex-row flex sm:h-auto h-screen sm:justify-center sm:items-center pt-12 sm:mt-2 gap-2 sm:mb-8"
-            : "sm:w-full w-[70%] bg-black sm:bg-white sm:relative transform fixed z-50 flex-col sm:flex-row flex sm:h-auto h-screen sm:justify-center sm:items-center pt-12 sm:mt-2 gap-2 sm:mb-8"
+            ? "sm:w-full w-[70%] bg-black sm:relative transform fixed z-50 flex-col sm:flex-row sm:flex-wrap flex sm:h-auto h-screen sm:justify-center sm:items-center pt-12 sm:mt-2 gap-2 sm:mb-8"
+            : "sm:w-full w-[70%] bg-black sm:bg-white sm:relative transform fixed z-50 flex-col sm:flex-row sm:flex-wrap sm:gap-4 flex sm:h-auto h-screen sm:justify-center sm:items-center pt-12 sm:mt-2 sm:mb-8"
         }`}
       >
         <Link

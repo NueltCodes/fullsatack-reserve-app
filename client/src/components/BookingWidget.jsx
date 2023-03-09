@@ -16,6 +16,8 @@ export default function BookingWidget({ place }) {
   const { user } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
   const [link, setLink] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
@@ -32,7 +34,44 @@ export default function BookingWidget({ place }) {
     );
   }
 
+  // async function bookPlace() {
+  //   if (!checkIn || !checkOut || !numberOfGuests || !name || !phone) {
+  //     setErrorMessage("Please fill in all fields before booking.");
+  //     return;
+  //   }
+  //   const Booking = {
+  //     checkIn,
+  //     checkOut,
+  //     numberOfGuests,
+  //     name,
+  //     phone,
+  //     place: place._id,
+  //     price: numberOfNights * place.price,
+  //   };
+  //   const response = await axios.post("/bookings", Booking);
+  //   const bookingId = response.data._id; // extracted the booking ID from the response
+
+  //   Swal.fire({
+  //     icon: "success",
+  //     title: "Booking successful",
+  //     text: "Thank you for booking with us!",
+  //     showConfirmButton: false,
+  //     timer: 4000, // close the pop-up after 4 seconds
+  //   });
+  //   setLink(true);
+
+  //   // Reset the state variables to their initial values
+  //   setCheckIn("");
+  //   setCheckOut("");
+  //   setNumberOfGuests(1);
+  //   setName("");
+  //   setPhone("");
+  //   navigate(`/account/bookings/${bookingId}`);
+  // }
+
   async function bookPlace() {
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 1000); // reset the button after 1 second
     if (!checkIn || !checkOut || !numberOfGuests || !name || !phone) {
       setErrorMessage("Please fill in all fields before booking.");
       return;
@@ -120,7 +159,10 @@ export default function BookingWidget({ place }) {
               onChange={(ev) => setName(ev.target.value)}
               className="w-full  py-2 px-3 rounded-lg inputText"
             />
-            <label>Phone number:</label>
+            <label>
+              Phone number:{" "}
+              <span className="text-sm text-gray-500">+1, +234, +444 etc.</span>{" "}
+            </label>
             <input
               type="tel"
               value={phone}
@@ -132,10 +174,13 @@ export default function BookingWidget({ place }) {
       </div>
       <button
         onClick={bookPlace}
-        className="primary mt-4 flex justify-center items-center"
+        className={` border-none
+        ${
+          isClicked
+            ? "button-clicked w-full"
+            : "primary mt-4 flex justify-center items-center"
+        }`}
       >
-        {/* {checkIn && checkOut && numberOfGuests && name && phone ? (
-          <Link className="h-full w-full" to={`/account/bookings`}> */}
         {bookingLoading ? (
           <div className="w-9 h-9  border-2  border-b-green-400 border-l-white border-t-green-400 border-r-green-400 border-solid rounded-full animate-spin"></div>
         ) : (
@@ -148,11 +193,6 @@ export default function BookingWidget({ place }) {
             )}
           </>
         )}
-        {/* </Link>
-        ) : ( */}
-
-        {/* </> */}
-        {/* )} */}
       </button>
     </div>
   );

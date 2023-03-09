@@ -23,41 +23,33 @@ export default function Register() {
   }
 
   return (
-    <div className="mt-4 grow flex justify-center  items-center">
-      <div className="mb-8">
+    <div className="mt-4 grow flex items-center justify-around">
+      <div className="mb-64">
         <h1 className="text-4xl text-center mb-4">Register</h1>
         <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input
             type="text"
-            placeholder="john Doe"
+            className=" w-full border my-1 py-2 px-3 rounded-lg bg-blue-50"
+            placeholder="John Doe"
             value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            onChange={(ev) => setName(ev.target.value)}
           />
-
           <input
-            type="text"
+            type="email"
             placeholder="your@email.com"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(ev) => setEmail(ev.target.value)}
           />
-
           <input
             type="password"
             placeholder="password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(ev) => setPassword(ev.target.value)}
           />
           <button className="primary">Register</button>
-
           <div className="text-center py-2 text-gray-500">
-            Already have an account ?{" "}
-            <Link to="/login" className="underline text-black">
+            Already a member?{" "}
+            <Link className="underline text-black" to={"/login"}>
               Login
             </Link>
           </div>

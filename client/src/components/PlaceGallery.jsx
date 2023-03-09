@@ -7,7 +7,7 @@ export default function PlaceGallery({ place }) {
 
   if (showAllPhotos) {
     return (
-      <div className="absolute inset-0 bg-black text-white min-h-screen">
+      <div className="fixed overflow-y-scroll inset-0 bg-black text-white min-h-screen">
         <div className="bg-black p-8 grid gap-4">
           <div>
             <h2 className="sm:text-3xl text-sm sm:mr-48 mr-20 w-auto">
@@ -23,25 +23,27 @@ export default function PlaceGallery({ place }) {
           </div>
 
           <div className="flex flex-col justify-center items-center gap-6 mt-5">
-            {place?.photos?.length > 0
-              ? place.photos.map((photo) => (
-                  <div>
-                    <img
-                      src={"http://localhost:4000/uploads/" + photo}
-                      alt=""
-                      className="w-[500px] md:w-[1200px]"
-                    />
-                  </div>
-                ))
-              : place.images.map((images) => (
-                  <div>
-                    <img
-                      src={"http://localhost:4000/" + images}
-                      alt=""
-                      className="w-[500px] md:w-[1200px]"
-                    />
-                  </div>
-                ))}
+            {place?.images?.length > 0 &&
+              place.images.map((images) => (
+                <div>
+                  <img
+                    src={"http://localhost:4000/" + images}
+                    alt=""
+                    className="w-[500px] sm:h-[900px] h-[500px] md:w-[1200px] object-cover"
+                  />
+                </div>
+              ))}
+
+            {place?.photos?.length > 0 &&
+              place.photos.map((photo) => (
+                <div>
+                  <img
+                    src={"http://localhost:4000/uploads/" + photo}
+                    alt=""
+                    className="w-[500px] sm:h-[900px] h-[500px] md:w-[1200px] object-cover"
+                  />
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -54,57 +56,55 @@ export default function PlaceGallery({ place }) {
     <div className="relative cursor-pointer">
       <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-lg overflow-hidden">
         <div>
-          {place.photos?.[0] ? (
+          {place.images?.[0] ? (
             <div>
               <img
                 onClick={() => setShowAllPhotos(true)}
-                className="aspect-square cursor-pointer object-cover"
-                src={"http://localhost:4000/uploads/" + place.photos[0]}
+                className="aspect-square w-full cursor-pointer object-cover"
+                src={"http://localhost:4000/" + place.images[0]}
                 alt=""
               />
             </div>
           ) : (
-            place.images?.[0](
-              <div>
-                <img
-                  onClick={() => setShowAllPhotos(true)}
-                  className="aspect-square cursor-pointer object-cover"
-                  src={"http://localhost:4000/" + place.images[0]}
-                  alt=""
-                />
-              </div>
-            )
+            <div>
+              <img
+                onClick={() => setShowAllPhotos(true)}
+                className="aspect-square w-full cursor-pointer object-cover"
+                src={"http://localhost:4000/uploads/" + place.photos[0]}
+                alt=""
+              />
+            </div>
           )}
         </div>
         <div className="grid">
-          {place.photos?.[1] ? (
+          {place.images?.[1] ? (
             <img
               onClick={() => setShowAllPhotos(true)}
-              className="aspect-square cursor-pointer object-cover pb-1"
-              src={"http://localhost:4000/uploads/" + place.photos[1]}
+              className="aspect-square cursor-pointer object-cover pb-1 w-full"
+              src={"http://localhost:4000/" + place.images[1]}
               alt=""
             />
           ) : (
             <img
               onClick={() => setShowAllPhotos(true)}
-              className="aspect-square cursor-pointer object-cover pb-1"
-              src={"http://localhost:4000/" + place.images[1]}
+              className="aspect-square cursor-pointer object-cover pb-1 w-full"
+              src={"http://localhost:4000/uploads/" + place.photos[1]}
               alt=""
             />
           )}
           <div className="overflow-hidden">
-            {place.photos?.[2] ? (
+            {place.images?.[2] ? (
               <img
                 onClick={() => setShowAllPhotos(true)}
-                className="aspect-square cursor-pointer object-cover pt-1"
-                src={"http://localhost:4000/uploads/" + place.photos[2]}
+                className="aspect-square cursor-pointer object-cover pt-1 w-full"
+                src={"http://localhost:4000/" + place.images[2]}
                 alt=""
               />
             ) : (
               <img
                 onClick={() => setShowAllPhotos(true)}
-                className="aspect-square cursor-pointer object-cover pt-1"
-                src={"http://localhost:4000/" + place.images[2]}
+                className="aspect-square cursor-pointer object-cover pt-1 w-full"
+                src={"http://localhost:4000/uploads/" + place.photos[2]}
                 alt=""
               />
             )}

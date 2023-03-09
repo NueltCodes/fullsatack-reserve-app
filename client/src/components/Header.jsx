@@ -1,21 +1,44 @@
-import { HiOutlineSearch, HiUser } from "react-icons/hi";
-import { AiOutlineClose, AiOutlineLogin, AiOutlineMenu } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { HiOutlineSearch } from "react-icons/hi";
+import {
+  AiOutlineClose,
+  AiOutlineLogin,
+  AiOutlineLogout,
+  AiOutlineMenu,
+} from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import { useContext } from "react";
 import { useState } from "react";
 import AccountNav from "./AccountNav";
+import axios from "axios";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function Header() {
   const [premiumOffer, setPremiumOffer] = useState(false);
   const [close, setClose] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   function searchFunctions() {
     setPremiumOffer((prev) => !prev);
   }
 
   function closeBar() {
     setClose((prev) => !prev);
+  }
+
+  async function logout() {
+    await axios.post("/logout");
+    setUser(null);
+    navigate("/");
+    Swal.fire({
+      icon: "success",
+      title: "Logging out",
+      text: "User logged out.",
+      showConfirmButton: false,
+      timer: 4000,
+    });
   }
 
   return (
@@ -76,17 +99,14 @@ export default function Header() {
           </Link>
         )}
 
-        {user && (
-          <Link
-            to={user ? "/account" : "/login"}
-            className="flex gap-2 items-center shadow-md border border-gray-300 rounded-full py-2 px-2 sm:px-4"
-          >
+        {/* {user && (
+          <div className="flex items-center gap-1 ">
             <div className="bg-gray-500 text-white rounded-full border overflow-hidden">
               <HiUser className="relative top-0.5" size={16} />
             </div>
             {!!user && <div className="text-xs">{user.name.slice(0 - 5)}</div>}
-          </Link>
-        )}
+          </div>
+        )} */}
 
         {!user && (
           <Link to="/login" className="flex items-center gap-1">
@@ -95,13 +115,20 @@ export default function Header() {
           </Link>
         )}
 
-        {/* <div
-          onClick={closeBar}
-          className="sm:hidden flex gap-2 items-center cursor-pointer shadow-md border border-gray-300 rounded-full py-2 px-2 sm:px-4"
-        >
-          <AiOutlineMenu />
-          <div className="sm:block hidden text-sm">Menu</div>
-        </div> */}
+        {user && (
+          <div
+            onClick={logout}
+            className="flex items-center gap-2 cursor-pointer group "
+          >
+            <div className="md:block hidden">Logout</div>
+            <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
+              <AiOutlineLogout
+                className="text-red-500 group-hover:text-white"
+                size={16}
+              />
+            </div>
+          </div>
+        )}
       </header>
 
       {!!user && (

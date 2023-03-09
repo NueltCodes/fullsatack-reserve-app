@@ -9,6 +9,7 @@ import SafetyPerksForm from "../components/Forminputs/SafetyPerksForm";
 import OtherSpaceForm from "../components/Forminputs/OtherSpaceForm";
 import BedroomForm from "../components/Forminputs/BedroomForm";
 import PerksLabelForm from "../components/Forminputs/PerksLabelForm";
+import { BsArrowUpCircle } from "react-icons/bs";
 
 export default function PlacesFormPage() {
   const { id } = useParams();
@@ -34,6 +35,7 @@ export default function PlacesFormPage() {
   const [bed, setBed] = useState(0);
   const [price, setPrice] = useState(100);
   const navigate = useNavigate();
+  const [isClicked, setIsClicked] = useState(false);
 
   const handleImageChange = (e) => {
     const files = e.target.files;
@@ -75,12 +77,17 @@ export default function PlacesFormPage() {
 
   async function savePlace(ev) {
     ev.preventDefault();
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 1000); // reset the button after 1 second
     const placeData = new FormData();
     placeData.append("title", title);
     placeData.append("address", address);
     placeData.append("description", description);
     addedPhotos.forEach((photo) => placeData.append("addedPhotos", photo));
     images.forEach((image) => placeData.append("images", image));
+    perks.forEach((perk) => {
+      placeData.append("perks[]", perk);
+    });
     roomPerks.forEach((roomPerk) => {
       placeData.append("roomPerks[]", roomPerk);
     });
@@ -188,7 +195,7 @@ export default function PlacesFormPage() {
     setBed(bed + 1);
   };
   return (
-    <div className="px-2 lg:px-32 mx-auto overflow-hidden !bg-black min-h-screen">
+    <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden !bg-black min-h-screen">
       <div className="sm:block hidden">
         <AccountNav />
       </div>{" "}
@@ -226,7 +233,6 @@ export default function PlacesFormPage() {
             if no selected image from device
           </p>
           <PhotoUploads addedPhotos={addedPhotos} onChange={setAddedPhotos} />
-
           <input
             type="file"
             name="images"
@@ -234,7 +240,6 @@ export default function PlacesFormPage() {
             onChange={handleImageChange}
           />
           {images && <div className="bg-green-700">{images.length}</div>}
-
           <div>
             <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
               Description
@@ -248,15 +253,10 @@ export default function PlacesFormPage() {
               className="inputText"
             />
           </div>
-
           <PerksLabelForm selected={perks} onChange={setPerks} />
-
           <BedroomForm selected={roomPerks} onChange={setRoomPerks} />
-
           <OtherSpaceForm selected={otherSpace} onChange={setOtherSpace} />
-
           <SafetyPerksForm selected={safetyGuide} onChange={setSafetyGuide} />
-
           <HouseRulesForm
             rules1={rules1}
             setRules1={setRules1}
@@ -269,7 +269,6 @@ export default function PlacesFormPage() {
             rules5={rules5}
             setRules5={setRules5}
           />
-
           <h2 className="md:text-2xl mt-8 font-semibold text-white text-[17px]">
             Extra Info
           </h2>
@@ -280,7 +279,6 @@ export default function PlacesFormPage() {
             className="inputText"
             placeholder="security dogs in the compound"
           />
-
           <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
             Check in & out time
           </h2>
@@ -332,7 +330,6 @@ export default function PlacesFormPage() {
               />
             </div>
           </div>
-
           <div className="mt-4">
             <div className="flex items-center gap-10">
               <h3 className="mt-2 -mb-1 text-gray-300 w-[190px]">
@@ -406,14 +403,32 @@ export default function PlacesFormPage() {
               </div>
             </div>
           </div>
-
           {id ? (
-            <button className="primary my-8"> Update</button>
+            <button
+              className={` border-none
+            ${isClicked ? "button-clicked w-full" : "primary my-8"}`}
+            >
+              {" "}
+              Update
+            </button>
           ) : (
-            <button className="primary my-8"> Create</button>
+            <button
+              className={` border-none
+          ${isClicked ? "button-clicked w-full" : "primary my-8"}`}
+            >
+              {" "}
+              Create
+            </button>
           )}
         </form>
       </div>
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 shadow-md rounded-full hover:bg-blue-600 animate-bounce"
+      >
+        <p className="sm:block hidden">Back to Top</p>
+        <BsArrowUpCircle className="w-full sm:hidden block" />
+      </button>
     </div>
   );
 }

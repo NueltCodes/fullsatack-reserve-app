@@ -263,6 +263,13 @@ app.get("/places/:id", async (req, res) => {
   res.json(await Place.findById(id));
 });
 
+app.delete("/user-places/:id", (req, res) => {
+  const { id } = req.params;
+  Place.findByIdAndDelete(id)
+    .then(() => res.status(204).end())
+    .catch((err) => res.status(500).json({ error: err.message }));
+});
+
 app.put("/places/:id", upload.array("images"), async (req, res) => {
   const { id } = req.params;
   const { token } = req.cookies;
@@ -342,6 +349,22 @@ app.post("/bookings", async (req, res) => {
       user: userData.id,
     });
     res.json(newBooking);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+app.delete("/bookings/:id", async (req, res) => {
+  try {
+    const userData = await getUserDataFromReq(req);
+    const booking = await Booking.findOneAndDelete({
+      _id: req.params.id,
+      user: userData.id,
+    });
+    if (!booking) {
+      return res.status(404).send("Booking not found");
+    }
+    res.send("Booking deleted successfully");
   } catch (error) {
     res.status(500).send(error.message);
   }

@@ -11,6 +11,7 @@ import HouseRules from "../components/perks/HouseRules";
 import EquipmentPerks from "../components/perks/EquipmentPerks";
 import Essentials from "../components/perks/Essentials";
 import Perks from "../components/perks/Perks";
+import { BsArrowUpCircle } from "react-icons/bs";
 export default function BookingPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -67,7 +68,7 @@ export default function BookingPage() {
           <div
             onClick={() => navigate(-1)}
             className={
-              "text-black w-9 flex justify-center items-center z-50 shadow-md bg-white p-2 rounded-full hover:shadow transition duration-200 ease-in-out cursor-pointer"
+              "text-black md:hidden  w-9 flex justify-center items-center z-50 shadow-md bg-white p-2 rounded-full hover:shadow transition duration-200 ease-in-out cursor-pointer"
             }
           >
             <HiArrowLeft className="sm:text-2xl" />
@@ -77,14 +78,14 @@ export default function BookingPage() {
             <AddressLink className="my-2 block">
               {booking.place.address}
             </AddressLink>
-            <div className="bg-gray-200 p-6 my-6 rounded-2xl sm:flex-row flex-col gap-2 flex items-center justify-between">
+            <div className="bg-gray-200 sm:p-6 p-2 my-6 rounded-2xl sm:flex-row flex-col gap-2 flex sm:items-center sm:justify-between">
               <div>
                 <h2 className="sm:text-2xl text-sm font-bold mb-4">
                   Your booking information:
                 </h2>
                 <BookingDates booking={booking} />
               </div>
-              <div className="bg-primary sm:p-6 p-2 flex sm:flex-col gap-2 items-center text-white rounded-2xl">
+              <div className="bg-primary justify-center sm:p-6 p-1 flex sm:flex-col gap-2 items-center text-white rounded-2xl">
                 <div className="sm:text-2xl text-lg">Total price</div>
                 <div className="sm:text-3xl text-2xl border-b ">
                   ${booking.price}
@@ -164,6 +165,13 @@ export default function BookingPage() {
               </div>
             </div>
           </div>
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 shadow-md rounded-full hover:bg-blue-600 animate-bounce"
+          >
+            <p className="sm:block hidden">Back to Top</p>
+            <BsArrowUpCircle className="w-full sm:hidden block" />
+          </button>
         </div>
       )}
     </>

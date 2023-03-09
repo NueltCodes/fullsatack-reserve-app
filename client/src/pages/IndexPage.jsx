@@ -1,10 +1,9 @@
 import "../App.css";
-import { HiOutlineSearch, HiUser } from "react-icons/hi";
-import { AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../components/Spinner";
+import { BsArrowUpCircle } from "react-icons/bs";
 
 export default function IndexPage() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +14,14 @@ export default function IndexPage() {
       setLoading(false);
     });
   }, []);
+
+  // Handler function to scroll the page to the top
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <>
@@ -64,6 +71,14 @@ export default function IndexPage() {
                 </Link>
               ))}
           </div>
+
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 shadow-md rounded-full hover:bg-blue-600 animate-bounce"
+          >
+            <p className="sm:block hidden">Back to Top</p>
+            <BsArrowUpCircle className="w-full sm:hidden block" />
+          </button>
         </div>
       )}
     </>

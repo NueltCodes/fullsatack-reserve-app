@@ -15,6 +15,30 @@ input[type="tel"] {
 html ::-webkit-scrollbar {
   display: none;
 }
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.line-clamp-7 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  overflow: hidden;
+}
+
+.button-clicked {
+  background-color: #185a04;
+  color: white;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+  animation: pulse 1s ease-out;
+}
+
 /* This is used to hide the scrollbar in safari browser */
 html {
   scrollbar-width: none;
