@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { BsArrowUpCircle } from "react-icons/bs";
+import React, { useContext, useEffect, useState } from "react";
+import { BsArrowUpCircle, BsHeart, BsHeartFill } from "react-icons/bs";
 import { HiArrowLeft } from "react-icons/hi";
 import { useNavigate, useParams } from "react-router-dom";
 import AddressLink from "../components/AddressLink";
@@ -12,6 +12,8 @@ import Perks from "../components/perks/Perks";
 import SafetyProperty from "../components/perks/SafetyProperty";
 import PlaceGallery from "../components/PlaceGallery";
 import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
+import { UserContext } from "../UserContext";
 
 export default function PlacePage() {
   const { id } = useParams();
@@ -24,10 +26,9 @@ export default function PlacePage() {
   const [safety, setSafety] = useState(false);
   const [extraInfo, setExtraInfo] = useState(false);
   const [desc, setDesc] = useState(false);
-  const [isFavorites, setIsFavorites] = useState(false);
-
+  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
-
+  const { user } = useContext(UserContext);
   useEffect(() => {
     if (!id) {
       return;
@@ -38,20 +39,41 @@ export default function PlacePage() {
     });
   }, [id]);
 
-  function ToggleFavorite() {
-    setIsFavorites((prev) => !prev);
-    if (isFavorites) {
-      // Remove the place from favorites list
-      axios.delete(`/favorites/${id}`).then(() => {
-        console.log(`Removed ${place.title} from favorites`);
-      });
-    } else {
-      // Add the place to favorites list
-      axios.post(`/favorites/${id}`).then(() => {
-        console.log(`Added ${place.title} to favorites`);
-      });
+  useEffect(() => {
+    if (!id) {
+      return;
     }
-  }
+    // Only make the request if the user is logged in
+    if (user) {
+      axios
+        .get(`/favorites/${id}`)
+        .then((response) => {
+          setIsFavorite(response.data.isFavorite);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [id, user]);
+
+  const toggleFavorite = async (placeId) => {
+    if (user) {
+      try {
+        if (isFavorite) {
+          await axios.delete(`/favorites/${placeId}`);
+          toast.success("Removed");
+        } else {
+          await axios.post(`/favorites/${placeId}`);
+          toast.success("Added to Favorites");
+        }
+        setIsFavorite(!isFavorite);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      navigate("/login");
+    }
+  };
 
   if (!place) return "";
 
@@ -84,13 +106,39 @@ export default function PlacePage() {
         <Spinner />
       ) : (
         <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
-          <div
-            onClick={() => navigate(-1)}
-            className={
-              "text-black w-9 flex justify-center items-center z-50 shadow-md bg-white p-2 rounded-full hover:shadow transition duration-200 ease-in-out cursor-pointer"
-            }
-          >
-            <HiArrowLeft className="sm:text-2xl" />
+          <div className="flex items-center justify-between">
+            <div
+              onClick={() => navigate(-1)}
+              className={
+                "text-black w-9 flex justify-center items-center z-40 shadow-md bg-white p-2 rounded-full hover:shadow transition duration-200 ease-in-out cursor-pointer"
+              }
+            >
+              <HiArrowLeft className="sm:text-2xl" />
+            </div>
+            <div
+              className="cursor-pointer group"
+              onClick={() => toggleFavorite(place._id)}
+            >
+              {isFavorite ? (
+                <div className="flex gap-1 items-center">
+                  <div className="bg-red-50 p-1 rounded-full">
+                    <BsHeartFill size={24} className="text-red-500" />
+                  </div>
+                  <span className="text-sm font-semibold hidden sm:block">
+                    Remove
+                  </span>
+                </div>
+              ) : (
+                <div className="flex gap-1 items-center">
+                  <div className="bg-red-50 p-1 rounded-full">
+                    <BsHeart size={24} className="text-red-600" />
+                  </div>
+                  <span className="text-sm font-semibold hidden sm:block">
+                    add to favorites
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="pt-2">
             <div>
@@ -98,11 +146,6 @@ export default function PlacePage() {
                 {place.title}
               </h1>
               <AddressLink>{place.address}</AddressLink>
-              <div>
-                <button onClick={ToggleFavorite}>
-                  {isFavorites ? "remove" : "add"}
-                </button>
-              </div>
             </div>
 
             <PlaceGallery place={place} />
@@ -192,7 +235,7 @@ export default function PlacePage() {
                   <div
                     className={`${
                       extraInfo
-                        ? "w-full md:text-lg text-sm fixed top-0 bg-gray-100 h-full  text-black pt-16 -mx-4 px-4 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32"
+                        ? "w-full md:text-lg text-sm fixed z-40 top-0 bg-gray-100 h-full  text-black pt-16 -mx-4 px-4 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32"
                         : "truncate w-auto"
                     }  mb-4 leading-8 md:leading-10 py-2`}
                   >

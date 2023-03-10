@@ -1,54 +1,54 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
-import Swal from "sweetalert2";
-import "sweetalert2/dist/sweetalert2.min.css";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
   const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
     try {
       const { data } = await axios.post("/login", { email, password });
       setUser(data);
-      Swal.fire({
-        icon: "success",
-        title: "Login successful",
-        text: "Explore more now you are logged in.",
-        showConfirmButton: false,
-        timer: 4000,
-      });
-      setRedirect(true);
-    } catch (e) {
-      alert("Login failed");
+      toast.success("Logged in successfully");
+      navigate("/");
+    } catch (error) {
+      if (error.response && error.response.status === 400) {
+        toast.error("Invalid email or password");
+      } else {
+        toast.error("Login failed");
+      }
     }
   }
 
-  if (redirect) {
-    return <Navigate to={"/"} />;
-  }
-
   return (
-    <div className="sm:my-6 my-2 lg:px-32 md:px-16 px-4 w-full h-screen sm:justify-center flex flex-col sm:flex-row items-center gap-4">
-      <div className="flex flex-col items-center w-auto">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="w-[70%] h-[70%] -rotate-90 animate-pulse text-red-500"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-          />
-        </svg>
+    <div className="sm:my-6 my-2 lg:px-32 md:px-16 px-4 w-full h-screen justify-center flex flex-col sm:flex-row items-center gap-4  md:justify-around">
+      <div className="flex flex-col gap-9 items-center w-auto ">
+        <span className="animate-bounce flex items-center w-[50%] h-[50%] ">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            className="w-full -rotate-90  text-red-500"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+            />
+          </svg>
+        </span>
         <span className="text-2xl sm:text-4xl -mt-6 font-bold  block">
           Reserve
         </span>

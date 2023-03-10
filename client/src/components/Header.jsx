@@ -136,7 +136,7 @@ export default function Header() {
           <div className="flex sm:flex-row sm:items-center sm:justify-around w-full flex-col gap-4">
             <p className="sm:text-2xl text-gray-500 text-sm font-bold">
               Hello,{" "}
-              {!!user && (
+              {user && user.name && (
                 <span className="text-xs">{user.name.slice(0 - 5)}</span>
               )}
             </p>
@@ -157,7 +157,7 @@ export default function Header() {
 
       {premiumOffer && (
         <div className="relative flex justify-center">
-          <div className="bg-black flex animate-bounce hover:animate-none cursor-pointer w-full items-center top-2  justify-between absolute px-4 p-2 rounded-full mx-auto ">
+          <div className="bg-black flex animate-bounce hover:animate-none cursor-pointer sm:w-[50%] items-center top-2  justify-between absolute px-4 p-2 rounded-full sm:mx-auto mx-2">
             <p className="text-white  ">
               Only premium users can use this search tool
             </p>

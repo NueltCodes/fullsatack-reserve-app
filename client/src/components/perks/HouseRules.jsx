@@ -29,7 +29,7 @@ export default function HouseRules({ place, onClick, selected }) {
 
         <div className="flex flex-col items-center">
           {selected && (
-            <div className="w-auto h-auto flex flex-col justify-center items-center md:text-lg text-sm fixed top-10 bg-gray-100 text-black -mx-4 px-8 py-20 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32">
+            <div className="w-auto h-auto flex flex-col justify-center items-center md:text-lg text-sm fixed z-40 top-10 bg-gray-100 text-black -mx-4 px-8 py-20 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32">
               <h2 className="font-semibold sm:text-3xl text-2xl pb-4 sm:pb-8  text-red-600 underline">
                 House rules
               </h2>

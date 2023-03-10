@@ -7,7 +7,7 @@ export default function PlaceGallery({ place }) {
 
   if (showAllPhotos) {
     return (
-      <div className="fixed overflow-y-scroll inset-0 bg-black text-white min-h-screen">
+      <div className="fixed z-50 overflow-y-scroll inset-0 bg-black text-white min-h-screen">
         <div className="bg-black p-8 grid gap-4">
           <div>
             <h2 className="sm:text-3xl text-sm sm:mr-48 mr-20 w-auto">

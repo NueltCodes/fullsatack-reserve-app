@@ -15,14 +15,6 @@ export default function IndexPage() {
     });
   }, []);
 
-  // Handler function to scroll the page to the top
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   return (
     <>
       {loading ? (
@@ -72,6 +64,7 @@ export default function IndexPage() {
               ))}
           </div>
 
+          {/* Handler function to scroll the page to the top */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="fixed bottom-4 right-4 bg-blue-500 text-white px-4 py-2 shadow-md rounded-full hover:bg-blue-600 animate-bounce"

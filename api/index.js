@@ -14,6 +14,7 @@ const fs = require("fs");
 require("dotenv").config();
 const app = express();
 const path = require("path");
+const Favorite = require("./models/Favorite.js");
 app.use("/image", express.static("image"));
 app.use("/uploads", express.static("uploads"));
 
@@ -45,45 +46,63 @@ app.get("/test", (req, res) => {
   res.json("test ok");
 });
 
+app.get("/users", async (req, res) => {
+  const { name, email } = req.query;
+  const existingUser = await User.findOne({
+    $or: [{ name: name }, { email: email }],
+  });
+  if (existingUser) {
+    res.json([existingUser]);
+  } else {
+    res.json([]);
+  }
+});
+
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
-
-  try {
-    const userDoc = await User.create({
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    res.status(400).json("User with that email already exists");
+  } else {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
       name,
       email,
-      password: bcrypt.hashSync(password, bcryptSalt),
+      password: hashedPassword,
     });
-    res.json(userDoc);
-  } catch (e) {
-    res.status(422).json(e);
+    await newUser.save();
+    res.json(newUser);
   }
 });
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
+
+  // Check if user with provided email exists
   const userDoc = await User.findOne({ email });
-  if (userDoc) {
-    const passOk = bcrypt.compareSync(password, userDoc.password);
-    if (passOk) {
-      jwt.sign(
-        {
-          email: userDoc.email,
-          id: userDoc._id,
-        },
-        jwtSecret,
-        {},
-        (err, token) => {
-          if (err) throw err;
-          res.cookie("token", token).json(userDoc);
-        }
-      );
-    } else {
-      res.status(422).json("pass not ok");
-    }
-  } else {
-    res.json("not found");
+  if (!userDoc) {
+    return res.status(422).json("User not found");
   }
+
+  // Check if password is correct for user with provided email
+  const passOk = bcrypt.compareSync(password, userDoc.password);
+  if (!passOk) {
+    return res.status(422).json("Invalid password");
+  }
+
+  // Generate and send JWT token if login successful
+  jwt.sign(
+    {
+      email: userDoc.email,
+      id: userDoc._id,
+    },
+    jwtSecret,
+    {},
+    (err, token) => {
+      if (err) throw err;
+      res.cookie("token", token).json(userDoc);
+    }
+  );
 });
 
 app.post("/logout", (req, res) => {
@@ -112,64 +131,6 @@ app.post("/upload-by-link", async (req, res) => {
   });
   res.json(newName);
 });
-
-// app.post("/upload", photosMiddleware.array("photos"), (req, res) => {
-//   const uploadedFiles = [];
-//   for (let i = 0; i < req.files.length; i++) {
-//     const { path, originalname } = req.files[i];
-//     const parts = originalname.split(".");
-//     const ext = parts[parts.length - 1];
-//     const newPath = path + "." + ext;
-//     fs.renameSync(path, newPath);
-//     uploadedFiles.push(newPath.replace("image/", ""));
-//   }
-//   res.json(uploadedFiles);
-// });
-
-// app.post("/places", photosMiddleware.array("images"), async (req, res) => {
-//   const { token } = req.cookies;
-//   const files = req.files;
-//   if (!files) {
-//     return res.status(400).json({ message: "No files uploaded" });
-//   }
-
-//   const fileNames = files.map((file) => file.filename);
-//   try {
-//     const place = new Place({
-//       title: req.body,
-//       address: req.body,
-//       addedPhotos: req.body,
-//       images: fileNames,
-//       description: req.body,
-//       perks: req.body,
-//       roomPerks: req.body,
-//       safetyGuide: req.body,
-//       otherSpace: req.body,
-//       extraInfo: req.body,
-//       checkIn: req.body,
-//       checkOut: req.body,
-//       maxGuests: req.body,
-//       rooms: req.body,
-//       bed: req.body,
-//       price: req.body,
-//       rules1: req.body,
-//       rules2: req.body,
-//       rules3: req.body,
-//       rules4: req.body,
-//       rules5: req.body,
-//     });
-//     jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-//       if (err) throw err;
-//       await place.create({
-//         owner: userData.id,
-//       });
-//       res.json(placeDoc);
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Error saving form" });
-//   }
-// });
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -373,6 +334,50 @@ app.delete("/bookings/:id", async (req, res) => {
 app.get("/bookings", async (req, res) => {
   const userData = await getUserDataFromReq(req);
   res.json(await Booking.find({ user: userData.id }).populate("place"));
+});
+
+app.post("/favorites/:placeId", async (req, res) => {
+  try {
+    const userData = await getUserDataFromReq(req);
+    await Favorite.create({
+      user: userData.id,
+      place: req.params.placeId,
+    });
+    res.send("Favorite added successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+app.get("/favorites/:placeId", async (req, res) => {
+  try {
+    const placeId = req.params.placeId;
+    const userData = await getUserDataFromReq(req);
+    const favorite = await Favorite.findOne({
+      user: userData.id,
+      place: placeId,
+    });
+    res.send({ isFavorite: !!favorite });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+app.delete("/favorites/:placeId", async (req, res) => {
+  try {
+    const userData = await getUserDataFromReq(req);
+    const favorite = await Favorite.findOne({
+      user: userData.id,
+      place: req.params.placeId,
+    });
+    if (!favorite) {
+      return res.status(404).send("Favorite not found");
+    }
+    await favorite.remove();
+    res.send("Favorite removed successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 app.listen(4000);
