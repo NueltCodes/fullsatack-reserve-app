@@ -1,6 +1,6 @@
 export default function PlaceImg({ place, index = 0, className = null }) {
   if (!className) {
-    className = "object-cover";
+    className = "object-cover sm:h-48 h-48 w-full";
   }
 
   return (

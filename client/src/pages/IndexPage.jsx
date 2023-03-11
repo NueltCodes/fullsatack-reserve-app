@@ -20,7 +20,7 @@ export default function IndexPage() {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="px-2 lg:px-32 mx-auto overflow-hidden min-h-screen">
+        <div className="px-2 lg:px-32 mx-auto overflow-hidden min-h-screen mb-6">
           <div className="mt-8 grid gap-x-6 gap-y-8 grid-cols-2 md:grid-cols-3 lg:grid-cols-3 ">
             {places.length > 0 &&
               places.map((place) => (
@@ -32,7 +32,7 @@ export default function IndexPage() {
                   <div className="bg-gray-500 mb-2 rounded-2xl flex">
                     {place.images?.[0] ? (
                       <img
-                        className="rounded-t-2xl object-cover aspect-square"
+                        className="rounded-t-2xl object-cover aspect-square "
                         src={"http://localhost:4000/" + place.images?.[0]}
                         alt="House Image"
                       />

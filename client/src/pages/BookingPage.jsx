@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import AddressLink from "../components/AddressLink";
 import BookingDates from "../components/BookingDates";
@@ -12,6 +12,7 @@ import EquipmentPerks from "../components/perks/EquipmentPerks";
 import Essentials from "../components/perks/Essentials";
 import Perks from "../components/perks/Perks";
 import { BsArrowUpCircle } from "react-icons/bs";
+import { UserContext } from "../UserContext";
 export default function BookingPage() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -23,8 +24,14 @@ export default function BookingPage() {
   const [safety, setSafety] = useState(false);
   const [extraInfo, setExtraInfo] = useState(false);
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
     if (id) {
       axios.get("/bookings").then((response) => {
         const foundBooking = response.data.find(({ _id }) => _id === id);

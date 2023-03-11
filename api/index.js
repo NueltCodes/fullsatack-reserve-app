@@ -349,6 +349,11 @@ app.post("/favorites/:placeId", async (req, res) => {
   }
 });
 
+app.get("/favorites", async (req, res) => {
+  const userData = await getUserDataFromReq(req);
+  res.json(await Favorite.find({ user: userData.id }).populate("place"));
+});
+
 app.get("/favorites/:placeId", async (req, res) => {
   try {
     const placeId = req.params.placeId;
@@ -363,12 +368,12 @@ app.get("/favorites/:placeId", async (req, res) => {
   }
 });
 
-app.delete("/favorites/:placeId", async (req, res) => {
+app.delete("/favorites/:id", async (req, res) => {
   try {
     const userData = await getUserDataFromReq(req);
     const favorite = await Favorite.findOne({
       user: userData.id,
-      place: req.params.placeId,
+      _id: req.params.id,
     });
     if (!favorite) {
       return res.status(404).send("Favorite not found");

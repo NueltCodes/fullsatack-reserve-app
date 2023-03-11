@@ -80,7 +80,7 @@ export default function PlacesPage() {
                     sm:flex-row flex-col mb-4 
                      gap-4 bg-gray-100 p-4 rounded-2xl"
                   >
-                    <div className="flex sm:w-32 sm:h-32 w-full h-full bg-gray-300 grow shrink-0">
+                    <div className="sm:w-48 w-full">
                       <PlaceImg place={place} index={place} />
                     </div>
 

@@ -109,9 +109,14 @@ export default function Header() {
         )} */}
 
         {!user && (
-          <Link to="/login" className="flex items-center gap-1">
-            <div>Login</div>
-            <AiOutlineLogin className="" size={16} />
+          <Link to="/login" className="flex items-center gap-1 group">
+            <div>Sign in</div>
+            <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
+              <AiOutlineLogin
+                className="text-red-500 group-hover:text-white"
+                size={16}
+              />
+            </div>
           </Link>
         )}
 
@@ -120,7 +125,7 @@ export default function Header() {
             onClick={logout}
             className="flex items-center gap-2 cursor-pointer group "
           >
-            <div className="md:block hidden">Logout</div>
+            <div className="md:block hidden">Sign out</div>
             <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
               <AiOutlineLogout
                 className="text-red-500 group-hover:text-white"

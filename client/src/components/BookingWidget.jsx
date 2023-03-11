@@ -5,9 +5,9 @@ import { useContext } from "react";
 import { UserContext } from "../UserContext";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export default function BookingWidget({ place }) {
-  const [bookingLoading, setBookingLoading] = useState(true);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -17,12 +17,11 @@ export default function BookingWidget({ place }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [link, setLink] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-
   const navigate = useNavigate();
+
   useEffect(() => {
     if (user) {
       setName(user.name);
-      setBookingLoading(false);
     }
   }, [user]);
 
@@ -34,46 +33,17 @@ export default function BookingWidget({ place }) {
     );
   }
 
-  // async function bookPlace() {
-  //   if (!checkIn || !checkOut || !numberOfGuests || !name || !phone) {
-  //     setErrorMessage("Please fill in all fields before booking.");
-  //     return;
-  //   }
-  //   const Booking = {
-  //     checkIn,
-  //     checkOut,
-  //     numberOfGuests,
-  //     name,
-  //     phone,
-  //     place: place._id,
-  //     price: numberOfNights * place.price,
-  //   };
-  //   const response = await axios.post("/bookings", Booking);
-  //   const bookingId = response.data._id; // extracted the booking ID from the response
-
-  //   Swal.fire({
-  //     icon: "success",
-  //     title: "Booking successful",
-  //     text: "Thank you for booking with us!",
-  //     showConfirmButton: false,
-  //     timer: 4000, // close the pop-up after 4 seconds
-  //   });
-  //   setLink(true);
-
-  //   // Reset the state variables to their initial values
-  //   setCheckIn("");
-  //   setCheckOut("");
-  //   setNumberOfGuests(1);
-  //   setName("");
-  //   setPhone("");
-  //   navigate(`/account/bookings/${bookingId}`);
-  // }
-
   async function bookPlace() {
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 1000); // reset the button after 1 second
+
     if (!checkIn || !checkOut || !numberOfGuests || !name || !phone) {
       setErrorMessage("Please fill in all fields before booking.");
+      return;
+    }
+
+    if (!user) {
+      navigate("/login");
       return;
     }
     const Booking = {
@@ -181,18 +151,14 @@ export default function BookingWidget({ place }) {
             : "primary mt-4 flex justify-center items-center"
         }`}
       >
-        {bookingLoading ? (
-          <div className="w-9 h-9  border-2  border-b-green-400 border-l-white border-t-green-400 border-r-green-400 border-solid rounded-full animate-spin"></div>
-        ) : (
-          <>
-            Book this place
-            {numberOfNights > 0 && (
-              <>
-                <span> ${numberOfNights * place.price}</span>
-              </>
-            )}
-          </>
-        )}
+        <h1>
+          Book this place{" "}
+          {numberOfNights > 0 && (
+            <>
+              <span className="ml-1"> ${numberOfNights * place.price}</span>
+            </>
+          )}
+        </h1>
       </button>
     </div>
   );

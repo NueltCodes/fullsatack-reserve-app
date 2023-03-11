@@ -61,7 +61,7 @@ export default function PlacePage() {
       try {
         if (isFavorite) {
           await axios.delete(`/favorites/${placeId}`);
-          toast.success("Removed");
+          toast.success("Removed from Favorites");
         } else {
           await axios.post(`/favorites/${placeId}`);
           toast.success("Added to Favorites");

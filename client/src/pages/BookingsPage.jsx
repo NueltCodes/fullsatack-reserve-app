@@ -65,17 +65,17 @@ export default function BookingsPage() {
           >
             <HiArrowLeft className="sm:text-2xl" />
           </div>
-          <h1 className="sm:hidden flex justify-center items-center bg-[#f5385d] p-2 mb-4 w-auto mx-auto my-3 text-white font-bold rounded-2xl">
+          <h1 className="sm:hidden flex justify-center items-center bg-gray-500 p-2 mb-4 w-auto mx-auto my-3 text-white font-bold rounded-2xl">
             Your Booked apartment
           </h1>
           <div className="">
-            {bookings?.length > 0 &&
+            {bookings?.length > 0 ? (
               bookings.map((booking) =>
                 booking.place ? (
                   <Link
                     key={booking._id}
                     to={`/account/bookings/${booking._id}`}
-                    className="sm:flex-row flex-col flex mb-4 gap-4 bg-gray-200 rounded-2xl overflow-hidden"
+                    className="sm:flex-row flex-col flex mb-4 sm:items-center  gap-4 bg-gray-200 rounded-2xl overflow-hidden"
                   >
                     <div className="sm:w-48 w-full">
                       <PlaceImg place={booking.place} />
@@ -96,13 +96,27 @@ export default function BookingsPage() {
                         </div>
                       </div>
                     </div>
+                    <div
+                      onClick={(event) => {
+                        event.stopPropagation();
+                      }}
+                      className="mr-4 mb-4"
+                    >
+                      <button
+                        className="primary"
+                        type="button"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          event.stopPropagation();
+                          handleDelete(booking);
+                        }}
+                      >
+                        Delete booking
+                      </button>
+                    </div>
                   </Link>
                 ) : (
-                  <div
-                    key={booking._id}
-                    to={`/account/bookings/${booking._id}`}
-                    className="sm:flex-row flex-col flex mb-4 gap-4 bg-gray-200 rounded-2xl overflow-hidden"
-                  >
+                  <div className="sm:flex-row flex-col flex mb-4 gap-4 bg-gray-200 rounded-2xl overflow-hidden">
                     <div className="sm:w-48 w-full">
                       <PlaceImg place={booking.place} />
                     </div>
@@ -140,7 +154,12 @@ export default function BookingsPage() {
                     </div>
                   </div>
                 )
-              )}
+              )
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-2xl font-bold mb-2">No place booked yet!</p>
+              </div>
+            )}
           </div>
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
