@@ -29,6 +29,7 @@ export default function PlacePage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+
   useEffect(() => {
     if (!id) {
       return;
@@ -40,15 +41,15 @@ export default function PlacePage() {
   }, [id]);
 
   useEffect(() => {
-    if (!id) {
-      return;
-    }
-    // Only make the request if the user is logged in
     if (user) {
       axios
-        .get(`/favorites/${id}`)
+        .get(`/favorites`)
         .then((response) => {
-          setIsFavorite(response.data.isFavorite);
+          const favorites = response.data;
+          const isPlaceFavorite = favorites.some(
+            (favorite) => favorite.place._id === id
+          );
+          setIsFavorite(isPlaceFavorite);
         })
         .catch((error) => {
           console.error(error);
@@ -60,22 +61,32 @@ export default function PlacePage() {
     if (user) {
       try {
         if (isFavorite) {
-          await axios.delete(`/favorites/${placeId}`);
-          toast.success("Removed from Favorites");
+          const response = await axios.get(`/favorites`);
+          const favorites = response.data;
+          const favorite = favorites.find(
+            (favorite) => favorite.place._id === id
+          );
+          if (favorite) {
+            const favoriteId = favorite._id;
+            await axios.delete(`/favorites/${favoriteId}`);
+            toast.success("Removed from Favorites");
+          } else {
+            console.error("Favorite not found");
+          }
         } else {
-          await axios.post(`/favorites/${placeId}`);
+          await axios.post(`/favorites`, { place: placeId });
           toast.success("Added to Favorites");
         }
         setIsFavorite(!isFavorite);
+        localStorage.setItem(`favorite_${id}`, !isFavorite);
       } catch (error) {
         console.error(error);
+        toast.error("An error occurred. Please try again later.");
       }
     } else {
       navigate("/login");
     }
   };
-
-  if (!place) return "";
 
   function displayDesc() {
     setDesc((prev) => !prev);
@@ -170,9 +181,7 @@ export default function PlacePage() {
                         <h2 className="font-semibold sm:text-3xl text-2xl">
                           Description
                         </h2>
-                        <p className="leading-7 line-clamp-7">
-                          {place.description}
-                        </p>
+                        <p className="leading-7">{place.description}</p>
                       </>
                     )}
                     <p

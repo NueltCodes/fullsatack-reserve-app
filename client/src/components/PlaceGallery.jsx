@@ -56,21 +56,12 @@ export default function PlaceGallery({ place }) {
     <div className="relative cursor-pointer">
       <div className="grid gap-2 grid-cols-[2fr_1fr] rounded-lg overflow-hidden">
         <div>
-          {place.images?.[0] ? (
+          {place.images && (
             <div>
               <img
                 onClick={() => setShowAllPhotos(true)}
                 className="aspect-square w-full cursor-pointer object-cover"
                 src={"http://localhost:4000/" + place.images[0]}
-                alt=""
-              />
-            </div>
-          ) : (
-            <div>
-              <img
-                onClick={() => setShowAllPhotos(true)}
-                className="aspect-square w-full cursor-pointer object-cover"
-                src={"http://localhost:4000/uploads/" + place.photos[0]}
                 alt=""
               />
             </div>
@@ -88,7 +79,7 @@ export default function PlaceGallery({ place }) {
             <img
               onClick={() => setShowAllPhotos(true)}
               className="aspect-square cursor-pointer object-cover pb-1 w-full"
-              src={"http://localhost:4000/uploads/" + place.photos[1]}
+              src={"http://localhost:4000/uploads/" + place.photos[0]}
               alt=""
             />
           )}
@@ -104,7 +95,7 @@ export default function PlaceGallery({ place }) {
               <img
                 onClick={() => setShowAllPhotos(true)}
                 className="aspect-square cursor-pointer object-cover pt-1 w-full"
-                src={"http://localhost:4000/uploads/" + place.photos[2]}
+                src={"http://localhost:4000/uploads/" + place.photos[1]}
                 alt=""
               />
             )}

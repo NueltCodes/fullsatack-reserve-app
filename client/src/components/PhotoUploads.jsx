@@ -2,9 +2,14 @@ import axios from "axios";
 import { useState } from "react";
 
 export default function PhotoUploads({ addedPhotos, onChange }) {
+  const [isClicked, setIsClicked] = useState(false);
   const [photoLink, setPhotoLink] = useState("");
+
   async function addPhotoByLink(ev) {
     ev.preventDefault();
+    setIsClicked(true);
+    setTimeout(() => setIsClicked(false), 1000); // reset the button after 1 second
+
     const { data: filename } = await axios.post("/upload-by-link", {
       link: photoLink,
     });
@@ -13,23 +18,7 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
     });
     setPhotoLink("");
   }
-  // function uploadPhoto(ev) {
-  //   const files = ev.target.files;
-  //   const data = new FormData();
-  //   for (let i = 0; i < files.length; i++) {
-  //     data.append("photos", files[i]);
-  //   }
-  //   axios
-  //     .post("/upload", data, {
-  //       headers: { "Content-type": "multipart/form-data" },
-  //     })
-  //     .then((response) => {
-  //       const { data: filenames } = response;
-  //       onChange((prev) => {
-  //         return [...prev, ...filenames];
-  //       });
-  //     });
-  // }
+
   function removePhoto(ev, filename) {
     ev.preventDefault();
     onChange([...addedPhotos.filter((photo) => photo !== filename)]);
@@ -64,7 +53,8 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
         />
         <button
           onClick={validateAndAddPhoto}
-          className="bg-gray-200 px-4 rounded-2xl"
+          className={` border-none
+          ${isClicked ? "button-clicked" : "bg-gray-100 px-4 rounded-2xl"}`}
         >
           Add&nbsp;photo
         </button>
@@ -72,7 +62,7 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
       <div className="mt-2 grid gap-2 grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
         {addedPhotos.length > 0 &&
           addedPhotos.map((link) => (
-            <div className="h-32 flex relative" key={link}>
+            <div className="sm:h-32 h-20 flex relative" key={link}>
               <img
                 className="rounded-2xl w-full object-cover"
                 src={"http://localhost:4000/uploads/" + link}
@@ -80,7 +70,7 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
               />
               <button
                 onClick={(ev) => removePhoto(ev, link)}
-                className="cursor-pointer absolute bottom-1 right-1 text-white bg-black bg-opacity-50 rounded-2xl py-2 px-3"
+                className="cursor-pointer absolute sm:bottom-1 sm:right-1 bottom-0 right-0 text-white bg-black bg-opacity-50 rounded-2xl sm:py-2 sm:px-3 py-1 px-0.5"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +89,7 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
               </button>
               <button
                 onClick={(ev) => selectAsMainPhoto(ev, link)}
-                className="cursor-pointer absolute bottom-1 left-1 text-white bg-black bg-opacity-50 rounded-2xl py-2 px-3"
+                className="cursor-pointer absolute sm:bottom-1 sm:left-1 bottom-0 left-0 text-white bg-black bg-opacity-50 rounded-2xl sm:py-2 sm:px-3 py-1 px-0.5"
               >
                 {link === addedPhotos[0] && (
                   <svg
@@ -134,29 +124,6 @@ export default function PhotoUploads({ addedPhotos, onChange }) {
               </button>
             </div>
           ))}
-        {/* <label className="h-32 cursor-pointer flex items-center gap-1 justify-center border bg-transparent rounded-2xl p-2 text-2xl text-gray-600">
-          <input
-            type="file"
-            multiple
-            className="hidden"
-            onChange={uploadPhoto}
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-8 h-8"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-            />
-          </svg>
-          Upload
-        </label> */}
       </div>
     </>
   );

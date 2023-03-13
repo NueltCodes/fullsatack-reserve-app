@@ -37,14 +37,6 @@ export default function PlacesFormPage() {
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
 
-  const handleImageChange = (e) => {
-    const files = e.target.files;
-    setImages((prev) => {
-      return [...prev, ...files];
-    });
-  };
-  // console.log(images);
-
   useEffect(() => {
     if (!id) {
       return;
@@ -124,46 +116,47 @@ export default function PlacesFormPage() {
     navigate("/");
   }
 
-  // async function savePlace(ev) {
-  //   ev.preventDefault();
-  //   const placeData = {
-  //     title,
-  //     address,
-  //     addedPhotos,
-  //     images,
-  //     description,
-  //     perks,
-  //     roomPerks,
-  //     safetyGuide,
-  //     otherSpace,
-  //     extraInfo,
-  //     checkIn,
-  //     checkOut,
-  //     maxGuests,
-  //     rooms,
-  //     bed,
-  //     price,
-  //     rules1,
-  //     rules2,
-  //     rules3,
-  //     rules4,
-  //     rules5,
-  //   };
+  const handleImageChange = (e) => {
+    e.preventDefault();
+    const files = e.target.files;
+    const newImages = Array.from(files);
+    setImages((prev) => [...prev, ...newImages]);
 
-  //   if (id) {
-  //     // update
-  //     await axios.put("/places", {
-  //       id,
-  //       ...placeData,
-  //     });
-  //     navigate("/");
-  //   } else {
-  //     await axios.post("/places", placeData, {
-  //       headers: { "Content-type": "multipart/form-data" },
-  //     });
-  //     navigate("/");
-  //   }
-  // }
+    const imageFiles = Array.from(files);
+    Promise.all(
+      imageFiles.map((imageFile) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(imageFile);
+          reader.onload = () => {
+            const image = new File([reader.result], imageFile.name, {
+              type: imageFile.type,
+            });
+            resolve(image);
+          };
+          reader.onerror = (error) => reject(error);
+        });
+      })
+    )
+      .then((images) => {
+        placeData.delete("images"); // remove previously added images
+        images.forEach((image) => {
+          placeData.append("images", image);
+        });
+        setAddedPhotos((prev) => [...prev, ...imageFiles]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleRemoveImage = (index) => {
+    setImages((prevImages) => {
+      const newImages = [...prevImages];
+      newImages.splice(index, 1);
+      return newImages;
+    });
+  };
 
   const guestIncrease = (e) => {
     e.preventDefault();
@@ -226,20 +219,81 @@ export default function PlacesFormPage() {
             className="w-full border my-1 py-2 px-3 rounded-2xl inputText"
           />
           <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
-            Photos
+            uploads by link
           </h2>
           <p className="text-gray-300 text-sm">
-            Note: images added by links woiuld only be selected as the thumbnail
-            if no selected image from device
+            Note: Links would only displayed at the end of images uploaded from
+            your device
           </p>
           <PhotoUploads addedPhotos={addedPhotos} onChange={setAddedPhotos} />
-          <input
-            type="file"
-            name="images"
-            multiple
-            onChange={handleImageChange}
-          />
-          {images && <div className="bg-green-700">{images.length}</div>}
+
+          <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
+            uploads from device
+          </h2>
+          <p className="text-gray-300 text-sm">
+            Note: Images uploaded from device would always be diplayed first
+            before the upload by link
+          </p>
+          <label className="h-32 mb-2 my-3 cursor-pointer flex items-center gap-1 justify-center border bg-transparent rounded-2xl p-2 text-2xl text-gray-600">
+            <input
+              type="file"
+              name="images"
+              multiple
+              hidden
+              onChange={handleImageChange}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-8 h-8"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+              />
+            </svg>
+            Upload
+          </label>
+
+          {images && (
+            <div className="bg-gray-200 flex justify-center rounded-2xl w-[60px] my-2">
+              {images.length}
+            </div>
+          )}
+
+          <div
+            className="flex flex-wrap gap-2
+          "
+          >
+            {images.map((image, index) => (
+              <div className="sm:h-32 sm:w-32 h-20 w-20 relative" key={index}>
+                <img
+                  className="rounded-2xl w-full object-cover"
+                  src={
+                    image.src
+                      ? `http://localhost:4000/${image.src}`
+                      : URL.createObjectURL(new Blob([image]))
+                  }
+                  alt="uploaded Images"
+                />
+                {/* console.log(image) */}
+                <button
+                  className="cursor-pointer absolute bottom-0 right-0 text-white bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-2xl py-2 px-3"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemoveImage(index);
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+
           <div>
             <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
               Description

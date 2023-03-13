@@ -156,6 +156,28 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
+app.post("/places/remove-image/:id", async (req, res) => {
+  const { id } = req.params;
+  const { token } = req.cookies;
+  const { filename } = req.body;
+
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    if (err) throw err;
+    const placeDoc = await Place.findById(id);
+    if (userData.id === placeDoc.owner.toString()) {
+      try {
+        fs.unlinkSync(filename); // remove image file from storage
+        placeDoc.photos = placeDoc.photos.filter((photo) => photo !== filename);
+        await placeDoc.save();
+        res.json("ok");
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to remove image." });
+      }
+    }
+  });
+});
+
 app.post("/places", upload.array("images"), async (req, res) => {
   const { token } = req.cookies;
   const {
@@ -209,26 +231,6 @@ app.post("/places", upload.array("images"), async (req, res) => {
     });
     res.json(placeDoc);
   });
-});
-
-app.get("/user-places", (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-    const { id } = userData;
-    res.json(await Place.find({ owner: id }));
-  });
-});
-
-app.get("/places/:id", async (req, res) => {
-  const { id } = req.params;
-  res.json(await Place.findById(id));
-});
-
-app.delete("/user-places/:id", (req, res) => {
-  const { id } = req.params;
-  Place.findByIdAndDelete(id)
-    .then(() => res.status(204).end())
-    .catch((err) => res.status(500).json({ error: err.message }));
 });
 
 app.put("/places/:id", upload.array("images"), async (req, res) => {
@@ -290,6 +292,26 @@ app.put("/places/:id", upload.array("images"), async (req, res) => {
   });
 });
 
+app.get("/user-places", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, jwtSecret, {}, async (err, userData) => {
+    const { id } = userData;
+    res.json(await Place.find({ owner: id }));
+  });
+});
+
+app.get("/places/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Place.findById(id));
+});
+
+app.delete("/user-places/:id", (req, res) => {
+  const { id } = req.params;
+  Place.findByIdAndDelete(id)
+    .then(() => res.status(204).end())
+    .catch((err) => res.status(500).json({ error: err.message }));
+});
+
 app.get("/places", async (req, res) => {
   res.json(await Place.find());
 });
@@ -336,14 +358,15 @@ app.get("/bookings", async (req, res) => {
   res.json(await Booking.find({ user: userData.id }).populate("place"));
 });
 
-app.post("/favorites/:placeId", async (req, res) => {
+app.post("/favorites", async (req, res) => {
   try {
     const userData = await getUserDataFromReq(req);
-    await Favorite.create({
+    const { place } = req.body;
+    const newFavorite = await Favorite.create({
+      place,
       user: userData.id,
-      place: req.params.placeId,
     });
-    res.send("Favorite added successfully");
+    res.json(newFavorite);
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -354,32 +377,17 @@ app.get("/favorites", async (req, res) => {
   res.json(await Favorite.find({ user: userData.id }).populate("place"));
 });
 
-app.get("/favorites/:placeId", async (req, res) => {
-  try {
-    const placeId = req.params.placeId;
-    const userData = await getUserDataFromReq(req);
-    const favorite = await Favorite.findOne({
-      user: userData.id,
-      place: placeId,
-    });
-    res.send({ isFavorite: !!favorite });
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
 app.delete("/favorites/:id", async (req, res) => {
   try {
     const userData = await getUserDataFromReq(req);
-    const favorite = await Favorite.findOne({
-      user: userData.id,
+    const favorite = await Favorite.findOneAndDelete({
       _id: req.params.id,
+      user: userData.id,
     });
     if (!favorite) {
       return res.status(404).send("Favorite not found");
     }
-    await favorite.remove();
-    res.send("Favorite removed successfully");
+    res.send("Favorite deleted successfully");
   } catch (error) {
     res.status(500).send(error.message);
   }
