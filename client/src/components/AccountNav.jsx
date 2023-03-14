@@ -1,19 +1,40 @@
-import React from "react";
-import { AiOutlineClose, AiOutlineUnorderedList } from "react-icons/ai";
+import axios from "axios";
+import React, { useContext } from "react";
+import {
+  AiOutlineClose,
+  AiOutlineLogout,
+  AiOutlineUnorderedList,
+} from "react-icons/ai";
 import { BsHeartFill, BsHouseDoor } from "react-icons/bs";
 import { HiOutlineUser } from "react-icons/hi";
 import { MdDashboard } from "react-icons/md";
 import { Link, useLocation, useParams } from "react-router-dom";
+import { UserContext } from "../UserContext";
 
 export default function AccountNav({ setClose }) {
   const { pathname } = useLocation();
   const params = useParams();
   const { id } = params;
+  const { setUser } = useContext(UserContext);
+
   const pathRoute = (route) => {
     if (route === location.pathname) {
       return true;
     }
   };
+
+  async function logout() {
+    await axios.post("/logout");
+    setUser(null);
+    navigate("/");
+    Swal.fire({
+      icon: "success",
+      title: "Logging out",
+      text: "User logged out.",
+      showConfirmButton: false,
+      timer: 3000,
+    });
+  }
 
   function closeBar() {
     setClose((prev) => !prev);
@@ -116,12 +137,35 @@ export default function AccountNav({ setClose }) {
         >
           <BsHeartFill
             className={`  ${
-              pathRoute("/account/favorites") ? "text-white" : "text-red-500"
+              pathRoute("/account/favorites")
+                ? "text-white"
+                : "text-red-500 text-opacity-90"
             }`}
             size={20}
           />
           <div>Favorites</div>
         </Link>
+
+        <div
+          onClick={() => {
+            logout();
+            closeBar();
+          }}
+          className={`mt-2 flex items-center gap-1 sm:py-2 sm:my-0 my-2 py-2 px-2 sm:px-6 sm:rounded-full sm:justify-center  ${
+            pathRoute("/login")
+              ? "sm:pl-none pl-8 bg-[#f5385d] sm:text-white text-white transition duration-300 ease-in-out"
+              : "hover:text-white sm:hover:text-black sm:hover:shadow-md sm:bg-white sm:text-black sm:shadow-lg text-gray-300 transition duration-300 ease-in-out"
+          }`}
+        >
+          <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
+            <AiOutlineLogout
+              className="text-red-500 group-hover:text-white"
+              size={16}
+            />
+          </div>
+          <div>Sign out</div>
+        </div>
+
         <div
           onClick={closeBar}
           className="block sm:hidden text-red-500 absolute right-0 top-2 mr-4 bg-gray-200 hover:bg-white cursor-pointer p-1 rounded-full transition duration-200 ease-in-out"

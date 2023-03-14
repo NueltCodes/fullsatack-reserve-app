@@ -29,7 +29,7 @@ export default function PlaceGallery({ place }) {
                   <img
                     src={"http://localhost:4000/" + images}
                     alt=""
-                    className="w-[500px] sm:h-[900px] h-[500px] md:w-[1200px] object-cover"
+                    className="w-[500px] sm:h-[900px] h-[200px] md:w-[1200px] object-cover"
                   />
                 </div>
               ))}
@@ -40,7 +40,7 @@ export default function PlaceGallery({ place }) {
                   <img
                     src={"http://localhost:4000/uploads/" + photo}
                     alt=""
-                    className="w-[500px] sm:h-[900px] h-[500px] md:w-[1200px] object-cover"
+                    className="w-[500px] sm:h-[900px] h-[200px] md:w-[1200px] object-cover"
                   />
                 </div>
               ))}

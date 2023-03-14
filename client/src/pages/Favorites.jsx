@@ -66,9 +66,11 @@ export default function Favorites() {
           <h1 className="sm:hidden flex justify-center items-center bg-gray-500 p-2 mb-4 w-auto mx-auto my-3 text-white font-bold rounded-2xl">
             Your favorite places
           </h1>
-          <parseFloat className="flex justify-center items-center p-2 mb-4 w-auto mx-auto my-3 text-red-500 font-bold rounded-2xl">
-            Tap on the places to view
-          </parseFloat>
+          {favorites?.length > 0 && (
+            <div className="flex justify-center items-center p-2 mb-4 w-auto mx-auto my-3 text-red-500 font-bold rounded-2xl">
+              Tap on the places to view
+            </div>
+          )}
           <div className="">
             <div className="">
               {favorites?.length > 0 ? (
@@ -139,7 +141,7 @@ export default function Favorites() {
               ) : (
                 <div className="text-center py-10">
                   <p className="text-2xl font-bold mb-2">
-                    No favorites created yet!
+                    No favorites place created yet!
                   </p>
                 </div>
               )}

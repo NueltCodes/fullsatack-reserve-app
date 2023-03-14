@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import AccountNav from "../components/AccountNav";
 import { HiMinus, HiPlus } from "react-icons/hi";
 import PhotoUploads from "../components/PhotoUploads";
@@ -30,12 +30,13 @@ export default function PlacesFormPage() {
   const [rules3, setRules3] = useState("");
   const [rules4, setRules4] = useState("");
   const [rules5, setRules5] = useState("");
-  const [maxGuests, setMaxGuests] = useState(0);
-  const [rooms, setRooms] = useState(0);
-  const [bed, setBed] = useState(0);
+  const [maxGuests, setMaxGuests] = useState(1);
+  const [rooms, setRooms] = useState(1);
+  const [bed, setBed] = useState(1);
   const [price, setPrice] = useState(100);
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (!id) {
@@ -143,7 +144,6 @@ export default function PlacesFormPage() {
         images.forEach((image) => {
           placeData.append("images", image);
         });
-        setAddedPhotos((prev) => [...prev, ...imageFiles]);
       })
       .catch((error) => {
         console.log(error);
@@ -238,6 +238,7 @@ export default function PlacesFormPage() {
             <input
               type="file"
               name="images"
+              required
               multiple
               hidden
               onChange={handleImageChange}
@@ -260,39 +261,13 @@ export default function PlacesFormPage() {
           </label>
 
           {images && (
-            <div className="bg-gray-200 flex justify-center rounded-2xl w-[60px] my-2">
-              {images.length}
+            <div className="flex items-center gap-1">
+              <div className="bg-gray-200 flex justify-center rounded-2xl w-[60px] my-2">
+                {images.length}
+              </div>{" "}
+              <span className="text-white">image</span>
             </div>
           )}
-
-          <div
-            className="flex flex-wrap gap-2
-          "
-          >
-            {images.map((image, index) => (
-              <div className="sm:h-32 sm:w-32 h-20 w-20 relative" key={index}>
-                <img
-                  className="rounded-2xl w-full object-cover"
-                  src={
-                    image.src
-                      ? `http://localhost:4000/${image.src}`
-                      : URL.createObjectURL(new Blob([image]))
-                  }
-                  alt="uploaded Images"
-                />
-                {/* console.log(image) */}
-                <button
-                  className="cursor-pointer absolute bottom-0 right-0 text-white bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-2xl py-2 px-3"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleRemoveImage(index);
-                  }}
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
 
           <div>
             <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
@@ -303,7 +278,7 @@ export default function PlacesFormPage() {
               value={description}
               required
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="A short description of your places you want to put for lodge"
+              placeholder="A main description of your places you want to shortlet"
               className="inputText"
             />
           </div>
@@ -331,7 +306,7 @@ export default function PlacesFormPage() {
             value={extraInfo}
             onChange={(e) => setExtraInfo(e.target.value)}
             className="inputText"
-            placeholder="security dogs in the compound"
+            placeholder="security camera or a a short info or special perks about your place"
           />
           <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
             Check in & out time
@@ -485,4 +460,63 @@ export default function PlacesFormPage() {
       </button>
     </div>
   );
+}
+
+// thic below is a function that displays the uploaded images
+{
+  /* <div
+            className="flex flex-wrap gap-2
+          "
+          > */
+}
+{
+  /* {images.map((image, index) => (
+              <div className="sm:h-32 sm:w-32 h-20 w-20 relative" key={index}>
+                <img src={"http://localhost:4000/" + image} alt="" />
+              </div>
+            ))} */
+}
+{
+  /* 
+            {images.map((image, index) => (
+              <div className="sm:h-32 sm:w-32 h-20 w-20 relative" key={index}>
+                {image && (
+                  <img
+                    className="rounded-2xl w-full object-cover"
+                    src={`http://localhost:4000/${image}`}
+                    alt="uploaded Images"
+                  />
+                )}
+
+                {/* <img
+                  className="rounded-2xl w-full object-cover"
+                  src={
+                    image
+                      ? `http://localhost:4000/${image}`
+                      : URL.createObjectURL(new Blob([image]))
+                  }
+                  alt="uploaded Images"
+                /> */
+}
+{
+  /* <div>
+                  <img
+                    className="rounded-2xl w-full object-cover"
+                    src={URL.createObjectURL(new Blob([image]))}
+                    alt="uploaded Images"
+                  />
+                </div>
+
+                <button
+                  className="cursor-pointer absolute bottom-0 right-0 text-white bg-gray-800 bg-opacity-50 hover:bg-opacity-100 rounded-2xl py-2 px-3"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleRemoveImage(index);
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div> */
 }

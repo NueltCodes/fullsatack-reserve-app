@@ -37,7 +37,7 @@ export default function Header() {
       title: "Logging out",
       text: "User logged out.",
       showConfirmButton: false,
-      timer: 4000,
+      timer: 3000,
     });
   }
 
@@ -47,7 +47,7 @@ export default function Header() {
         <>
           <span
             onClick={closeBar}
-            className="bg-black opacity-50 w-screen h-screen absolute"
+            className=" sm:hidden bg-black opacity-50 w-screen h-screen absolute"
           ></span>
           <div className="block sm:hidden relative">
             <AccountNav setClose={setClose} />
@@ -99,18 +99,9 @@ export default function Header() {
           </Link>
         )}
 
-        {/* {user && (
-          <div className="flex items-center gap-1 ">
-            <div className="bg-gray-500 text-white rounded-full border overflow-hidden">
-              <HiUser className="relative top-0.5" size={16} />
-            </div>
-            {!!user && <div className="text-xs">{user.name.slice(0 - 5)}</div>}
-          </div>
-        )} */}
-
         {!user && (
           <Link to="/login" className="flex items-center gap-1 group">
-            <div>Sign in</div>
+            <div className="text-sm">Sign in</div>
             <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
               <AiOutlineLogin
                 className="text-red-500 group-hover:text-white"
@@ -142,7 +133,7 @@ export default function Header() {
             <p className="sm:text-2xl text-gray-500 text-sm font-bold">
               Hello,{" "}
               {user && user.name && (
-                <span className="text-xs">{user.name.slice(0 - 5)}</span>
+                <span className="text-sm">{user.name.slice(0 - 5)}</span>
               )}
             </p>
             <p className="sm:text-2xl -mt-2 text-lg text-gray-700 font-bold">
