@@ -163,12 +163,15 @@ export default function PlacePage() {
             <div className="mt-8 mb-8 grid gap-8 grid-cols-1 sm:grid-cols-[2fr_1fr] ">
               <div>
                 <div className="my-4 ">
-                  <h2 className="font-semibold sm:text-3xl text-2xl">
+                  <h2 className="font-semibold sm:text-3xl text-2xl py-2">
                     Description
                   </h2>
-                  <p className="leading-8 md:leading-10 line-clamp-7">
-                    {place.description}
-                  </p>
+                  <p
+                    className="leading-8 md:leading-10 line-clamp-7"
+                    dangerouslySetInnerHTML={{
+                      __html: place.description,
+                    }}
+                  ></p>{" "}
                   <div
                     className={`${
                       desc
@@ -178,10 +181,16 @@ export default function PlacePage() {
                   >
                     {desc && (
                       <>
-                        <h2 className="font-semibold sm:text-3xl text-2xl">
+                        <h2 className="font-semibold sm:text-3xl text-2xl py-2">
                           Description
                         </h2>
-                        <p className="leading-7">{place.description}</p>
+
+                        <p
+                          className="leading-8 md:leading-10"
+                          dangerouslySetInnerHTML={{
+                            __html: place.description,
+                          }}
+                        ></p>
                       </>
                     )}
                     <p
@@ -244,8 +253,8 @@ export default function PlacePage() {
                   <div
                     className={`${
                       extraInfo
-                        ? "w-full md:text-lg text-sm fixed z-40 top-0 bg-gray-100 h-full  text-black pt-16 -mx-4 px-4 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32"
-                        : "truncate w-auto"
+                        ? "w-full md:text-lg text-sm fixed z-40 top-0 bg-gray-100 h-full text-black pt-16 -mx-4 px-4 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32 "
+                        : ""
                     }  mb-4 leading-8 md:leading-10 py-2`}
                   >
                     {extraInfo && (
@@ -253,7 +262,10 @@ export default function PlacePage() {
                         Extra info
                       </h2>
                     )}
-                    {place.extraInfo}
+                    <p
+                      className={extraInfo ? "w-full" : "line-clamp-3"}
+                      dangerouslySetInnerHTML={{ __html: place.extraInfo }}
+                    ></p>
                     <p
                       onClick={setExtra}
                       className={`${

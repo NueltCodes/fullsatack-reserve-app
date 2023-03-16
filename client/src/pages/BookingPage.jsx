@@ -20,6 +20,7 @@ export default function BookingPage() {
   const [showPerks, setShowPerks] = useState(false);
   const [roomEssentials, setRoomEssentials] = useState(false);
   const [amenities, setAmenities] = useState(false);
+  const [desc, setDesc] = useState(false);
   const [rules, setRules] = useState(false);
   const [safety, setSafety] = useState(false);
   const [extraInfo, setExtraInfo] = useState(false);
@@ -66,6 +67,10 @@ export default function BookingPage() {
     setRules((prev) => !prev);
   }
 
+  function displayDesc() {
+    setDesc((prev) => !prev);
+  }
+
   return (
     <>
       {loading ? (
@@ -102,10 +107,48 @@ export default function BookingPage() {
             <PlaceGallery place={booking.place} />
 
             <div className="my-4 ">
-              <h2 className="font-semibold sm:text-3xl text-2xl">
+              <h2 className="font-semibold sm:text-3xl text-2xl py-2">
                 Description
               </h2>
-              <p className="leading-7 ">{booking.place.description}</p>
+              <p
+                className="leading-8 md:leading-10 line-clamp-7"
+                dangerouslySetInnerHTML={{
+                  __html: booking.place.description,
+                }}
+              ></p>
+              <div
+                className={`${
+                  desc
+                    ? "w-full md:text-lg text-sm fixed top-0 bg-gray-100 h-full  text-black pt-16 -mx-4 px-4 md:-mx-16 md:px-16 overflow-y-scroll lg:-mx-32 lg:px-32"
+                    : " w-auto"
+                }  mb-4`}
+              >
+                {desc && (
+                  <>
+                    <h2 className="font-semibold sm:text-3xl text-2xl py-2">
+                      Description
+                    </h2>
+                    <p
+                      className={
+                        desc ? "w-full leading-8 md:leading-10" : "line-clamp-7"
+                      }
+                      dangerouslySetInnerHTML={{
+                        __html: booking.place.description,
+                      }}
+                    ></p>
+                  </>
+                )}
+                <p
+                  onClick={displayDesc}
+                  className={`${
+                    desc
+                      ? "text-black shadow-lg bg-white p-2 rounded-full fixed left-0 mx-4 top-0 hover:shadow md:mx-16 lg:mx-32 transition duration-200 ease-in-out  mt-4"
+                      : "text-black underline"
+                  } cursor-pointer`}
+                >
+                  {desc ? <HiArrowLeft className="sm:text-2xl" /> : "View"}
+                </p>
+              </div>{" "}
             </div>
 
             <div className="py-8 border-t-2">
@@ -153,7 +196,11 @@ export default function BookingPage() {
                       Extra info
                     </h2>
                   )}
-                  {booking.place.extraInfo}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: booking.place.extraInfo,
+                    }}
+                  ></div>
                   <p
                     onClick={setExtra}
                     className={`${

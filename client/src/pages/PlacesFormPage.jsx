@@ -10,6 +10,7 @@ import OtherSpaceForm from "../components/Forminputs/OtherSpaceForm";
 import BedroomForm from "../components/Forminputs/BedroomForm";
 import PerksLabelForm from "../components/Forminputs/PerksLabelForm";
 import { BsArrowUpCircle } from "react-icons/bs";
+import { Editor } from "@tinymce/tinymce-react";
 
 export default function PlacesFormPage() {
   const { id } = useParams();
@@ -238,7 +239,6 @@ export default function PlacesFormPage() {
             <input
               type="file"
               name="images"
-              required
               multiple
               hidden
               onChange={handleImageChange}
@@ -274,13 +274,38 @@ export default function PlacesFormPage() {
               Description
             </h2>
             <p className="text-gray-300 text-sm">descrption of the place</p>
-            <textarea
+
+            <Editor
+              apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+              value={description}
+              init={{
+                height: 300,
+                menubar: false,
+                plugins: [
+                  "advlist autolink lists link image",
+                  "charmap print preview anchor help",
+                  "searchreplace code visualblocks",
+                  "insertdatetime media table paste wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic | \
+      alignleft aligncenter alignright | \
+      bullist numlist outdent indent | help",
+                visualblocks_url: "/js/plugins/visualblocks/plugin.min.js",
+                code_url: "/js/plugins/code/plugin.min.js",
+                searchreplace_url: "/js/plugins/searchreplace/plugin.min.js",
+              }}
+              onEditorChange={(content) => setDescription(content)}
+            />
+
+            {/* previous mode of input */}
+            {/* <textarea
               value={description}
               required
               onChange={(e) => setDescription(e.target.value)}
               placeholder="A main description of your places you want to shortlet"
               className="inputText"
-            />
+            /> */}
           </div>
           <PerksLabelForm selected={perks} onChange={setPerks} />
           <BedroomForm selected={roomPerks} onChange={setRoomPerks} />
@@ -301,13 +326,40 @@ export default function PlacesFormPage() {
           <h2 className="md:text-2xl mt-8 font-semibold text-white text-[17px]">
             Extra Info
           </h2>
-          <p className="text-gray-300 text-sm">Any extra info ? (optional)</p>
-          <textarea
+          <p className="text-gray-300 text-sm">
+            Any extra info ? security camera or a short info or special perks
+            about your place (optional)
+          </p>
+
+          <Editor
+            apiKey={process.env.REACT_APP_TINYMCE_API_KEY}
+            value={extraInfo}
+            init={{
+              height: 300,
+              menubar: false,
+              plugins: [
+                "advlist autolink lists link image",
+                "charmap print preview anchor help",
+                "searchreplace code visualblocks",
+                "insertdatetime media table paste wordcount",
+              ],
+              toolbar:
+                "undo redo | formatselect | bold italic | \
+      alignleft aligncenter alignright | \
+      bullist numlist outdent indent | help",
+              visualblocks_url: "/js/plugins/visualblocks/plugin.min.js",
+              code_url: "/js/plugins/code/plugin.min.js",
+              searchreplace_url: "/js/plugins/searchreplace/plugin.min.js",
+            }}
+            onEditorChange={(content) => setExtraInfo(content)}
+          />
+
+          {/* <textarea
             value={extraInfo}
             onChange={(e) => setExtraInfo(e.target.value)}
-            className="inputText"
-            placeholder="security camera or a a short info or special perks about your place"
-          />
+            className="inputText whitespace-pre-wrap break-word "
+            placeholder="security camera or a short info or special perks about your place"
+          /> */}
           <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">
             Check in & out time
           </h2>
@@ -315,10 +367,10 @@ export default function PlacesFormPage() {
             add check in and out time, remeber to add some time window for
             cleaning the room before new guest arrival
           </p>
-          <div className="grid gap-8 mx-2 grid-cols-2 lg:grid-cols-4">
+          <div className="grid sm:gap-8 gap-1 mx-2 grid-cols-2 lg:grid-cols-4">
             <div className="">
               <h3 className="mt-2 text-gray-300 -mb-1">Check in time</h3>
-              <div className="flex  items-center">
+              <div className="flex items-center">
                 <input
                   type="number"
                   required
