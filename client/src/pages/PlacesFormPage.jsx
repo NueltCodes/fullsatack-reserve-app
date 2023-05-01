@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import AccountNav from "../components/AccountNav";
 import { HiMinus, HiPlus } from "react-icons/hi";
 import PhotoUploads from "../components/PhotoUploads";
 import HouseRulesForm from "../components/Forminputs/HouseRulesForm";
@@ -190,9 +189,6 @@ export default function PlacesFormPage() {
   };
   return (
     <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden !bg-black min-h-screen">
-      <div className="sm:block hidden">
-        <AccountNav />
-      </div>{" "}
       <div className="">
         <form onSubmit={savePlace}>
           <h2 className="md:text-2xl mt-4 font-semibold text-white text-[17px]">

@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useContext } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import AccountNav from "../components/AccountNav";
 import { UserContext } from "../UserContext";
 import PlacesPage from "./PlacesPage";
 
@@ -33,9 +32,6 @@ export default function ProfilePage() {
 
   return (
     <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
-      <div className="sm:block hidden">
-        <AccountNav />
-      </div>
       {subpage === "profile" && (
         <div className="text-center max-w-lg mx-auto">
           Logged in as {user?.name} ({user?.email}) <br />{" "}

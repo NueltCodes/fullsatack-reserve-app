@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { BsArrowUpCircle } from "react-icons/bs";
 import { HiArrowLeft } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
-import AccountNav from "../components/AccountNav";
 import PlaceImg from "../components/PlaceImg";
 import Spinner from "../components/Spinner";
 import Swal from "sweetalert2";
@@ -51,10 +50,6 @@ export default function Favorites() {
         <Spinner />
       ) : (
         <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
-          {" "}
-          <div className="sm:block hidden">
-            <AccountNav />
-          </div>
           <div
             onClick={() => navigate("/")}
             className={
@@ -86,9 +81,15 @@ export default function Favorites() {
                       </div>
                       <div className="py-3 p-2 pr-3 grow">
                         <h2 className="text-xl">{favorite.place.title}</h2>
-                        <p className="text-sm mt-2 line-clamp-3">
+                        {/* <p className="text-sm mt-2 line-clamp-3">
                           {favorite.place.description}
-                        </p>
+                        </p> */}
+                        <p
+                          className="leading-8 text-sm mt-2 line-clamp-3"
+                          dangerouslySetInnerHTML={{
+                            __html: favorite.place.description,
+                          }}
+                        ></p>
                       </div>
                       <div
                         onClick={(event) => {

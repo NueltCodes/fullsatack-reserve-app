@@ -20,7 +20,7 @@
     "react-router-dom": "^6.8.0",
     "react-spring": "^9.7.1",
     "react-toastify": "^9.1.1",
-    "sweetalert2": "^11.7.3"
+    "sweetalert2": "^11.4.8"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^5.0.2",

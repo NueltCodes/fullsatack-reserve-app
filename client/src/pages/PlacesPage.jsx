@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlinePlus } from "react-icons/ai";
 import axios from "axios";
-import AccountNav from "../components/AccountNav";
 import PlaceImg from "../components/PlaceImg";
 import Spinner from "../components/Spinner";
 import { MdDelete, MdEdit } from "react-icons/md";
@@ -56,10 +55,6 @@ export default function PlacesPage() {
         <Spinner />
       ) : (
         <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
-          {" "}
-          <div className="sm:block hidden">
-            <AccountNav />
-          </div>{" "}
           <div className="text-center">
             <Link
               className="inline-flex 

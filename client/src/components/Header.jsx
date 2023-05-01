@@ -54,7 +54,7 @@ export default function Header() {
           </div>
         </>
       )}
-      <header className="lg:px-32 md:px-16 px-4 py-2 flex bg-gray-700 text-white items-center justify-between">
+      <header className="lg:px-32 md:px-16 px-4 py-2 flex bg-blue-800 text-white items-center justify-between">
         <Link to={"/"} className="flex items-center gap-1">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -89,19 +89,10 @@ export default function Header() {
             <HiOutlineSearch size={16} />
           </button>
         </div>
-        {user && (
-          <Link
-            to={user ? "/account" : "/login"}
-            className="sm:flex hidden gap-2 items-center shadow-md  border border-gray-300 rounded-full py-2 px-2 sm:px-4"
-          >
-            <AiOutlineMenu />
-            <div className="sm:block hidden text-sm">Menu</div>
-          </Link>
-        )}
 
         {!user && (
           <Link to="/login" className="flex items-center gap-1 group">
-            <div className="text-sm">Sign in</div>
+            <div className="text-sm">Log in</div>
             <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
               <AiOutlineLogin
                 className="text-red-500 group-hover:text-white"
@@ -116,7 +107,7 @@ export default function Header() {
             onClick={logout}
             className="flex items-center gap-2 cursor-pointer group "
           >
-            <div className="md:block hidden">Sign out</div>
+            <div className="md:block hidden">Log out</div>
             <div className="p-1 w-auto bg-white rounded-full group-hover:bg-red-500 transition duration-300">
               <AiOutlineLogout
                 className="text-red-500 group-hover:text-white"
@@ -126,14 +117,17 @@ export default function Header() {
           </div>
         )}
       </header>
+      <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden bg-blue-800 hidden sm:block">
+        <AccountNav />
+      </div>
 
-      {!!user && (
+      {!!user ? (
         <div className="lg:px-32 mb-4 md:px-16 px-4 py-2 flex bg-white shadow-lg items-center justify-between">
           <div className="flex sm:flex-row sm:items-center sm:justify-around w-full flex-col gap-4">
             <p className="sm:text-2xl text-gray-500 text-sm font-bold">
               Hello,{" "}
               {user && user.name && (
-                <span className="text-sm">{user.name.slice(0 - 5)}</span>
+                <span className="text-sm">{user.name.slice(0, 10)}</span>
               )}
             </p>
             <p className="sm:text-2xl -mt-2 text-lg text-gray-700 font-bold">
@@ -149,11 +143,27 @@ export default function Header() {
             <div className="sm:block hidden text-sm">Menu</div>
           </div>
         </div>
+      ) : (
+        <div className="lg:px-32 mb-4 md:px-16 px-4 py-2 flex bg-white shadow-lg items-center justify-between">
+          <div className="flex sm:flex-row sm:items-center sm:justify-around w-full flex-col gap-4">
+            <p className="sm:text-2xl -mt-2 text-lg text-gray-700 font-bold">
+              Welcome Back! Login to access features
+            </p>
+          </div>
+
+          <div
+            onClick={closeBar}
+            className="flex sm:hidden gap-2 items-center cursor-pointer shadow-md border border-gray-300 rounded-full py-2 px-2 sm:px-4"
+          >
+            <AiOutlineMenu />
+            <div className="sm:block hidden text-sm">Menu</div>
+          </div>
+        </div>
       )}
 
       {premiumOffer && (
-        <div className="relative flex justify-center">
-          <div className="bg-black flex animate-bounce hover:animate-none cursor-pointer sm:w-[50%] items-center top-2  justify-between absolute px-4 p-2 rounded-full sm:mx-auto mx-2">
+        <div className="relative z-10 flex justify-center">
+          <div className="bg-black flex animate-bounce hover:animate-none cursor-pointer sm:w-[50%] items-center top-2 justify-between absolute px-4 p-2 rounded-full sm:mx-auto mx-2">
             <p className="text-white  ">
               Only premium users can use this search tool
             </p>

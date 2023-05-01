@@ -28,17 +28,6 @@ html ::-webkit-scrollbar {
   overflow: hidden;
 }
 
-.button-clicked {
-  background-color: #185a04;
-  color: white;
-  font-size: 1em;
-  padding: 0.5em 1em;
-  border: none;
-  border-radius: 0.5em;
-  cursor: pointer;
-  animation: pulse 1s ease-out;
-}
-
 /* This is used to hide the scrollbar in safari browser */
 html {
   scrollbar-width: none;

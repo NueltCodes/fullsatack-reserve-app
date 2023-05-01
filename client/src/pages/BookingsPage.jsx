@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
-import AccountNav from "../components/AccountNav";
 import PlaceImg from "../components/PlaceImg";
 import BookingDates from "../components/BookingDates";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,10 +52,6 @@ export default function BookingsPage() {
         <Spinner />
       ) : (
         <div className="px-4 lg:px-32 md:px-16 mx-auto overflow-hidden min-h-screen">
-          {" "}
-          <div className="sm:block hidden">
-            <AccountNav />
-          </div>
           <div
             onClick={() => navigate("/")}
             className={
@@ -80,7 +75,7 @@ export default function BookingsPage() {
                     <div className="sm:w-48 w-full">
                       <PlaceImg place={booking.place} />
                     </div>
-                    <div className="py-3 p-2 pr-3 grow">
+                    <div className=" p-2 pr-3 grow">
                       <h2 className="sm:text-2xl text-xl font-semibold">
                         {booking.place.title}
                       </h2>
@@ -100,7 +95,7 @@ export default function BookingsPage() {
                       onClick={(event) => {
                         event.stopPropagation();
                       }}
-                      className="mr-4 mb-4"
+                      className="sm:mr-4 mx-3 mb-4"
                     >
                       <button
                         className="primary"
